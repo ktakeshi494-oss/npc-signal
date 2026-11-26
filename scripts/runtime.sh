@@ -13,6 +13,20 @@ if [[ -z "${STATE_KEY:-}" ]]; then
   exit 1
 fi
 
+
+# Auth for pushes from fresh `git init` dirs (actions/checkout credentials only apply to the checkout).
+# GITHUB_TOKEN is passed by the workflow; it is masked and never printed.
+gh_push() {  # usage: gh_push <dir> <branch>
+  local dir=$1 br=$2
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    local b64; b64=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)
+    echo "::add-mask::$b64"
+    git -C "$dir" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $b64" push -f origin "$br"
+  else
+    git -C "$dir" push -f origin "$br"
+  fi
+}
+
 # Restore previous state from branch "state" if it exists (optional first run).
 if git ls-remote --exit-code origin refs/heads/state >/dev/null 2>&1; then
   git fetch origin state:state
@@ -54,7 +68,7 @@ git -C "$work" add pmsignals.sqlite.enc README.md
 git -C "$work" -c user.name="npc-signal-runtime" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
   commit -qm "state $(date -u +%Y-%m-%dT%H:%MZ)"
 git -C "$work" remote add origin "$(git remote get-url origin)"
-git -C "$work" push -f origin state
+gh_push "$work" state
 rm -rf "$work"
 echo "pushed encrypted state"
 
@@ -75,7 +89,7 @@ else
   git -C "$work" remote add origin "$(git remote get-url origin)"
   # Do not force-push gh-pages if it already has history we didn't fetch; replace contents via force
   # because this branch must contain only the static site.
-  git -C "$work" push -f origin gh-pages
+  gh_push "$work" gh-pages
   echo "pushed gh-pages"
 fi
 rm -rf "$work"

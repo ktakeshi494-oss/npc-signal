@@ -44,6 +44,7 @@ jobs:
           PM_FREE_CHANNEL_ID: ${{ secrets.PM_FREE_CHANNEL_ID }}
           PM_ADMIN_CHAT_IDS: ${{ secrets.PM_ADMIN_CHAT_IDS }}
           PM_SITE_URL: ${{ vars.PM_SITE_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PM_SESSION_SECONDS: "180"
         run: |
           chmod +x scripts/state_crypt.sh scripts/runtime.sh

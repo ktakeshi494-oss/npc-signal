@@ -1,0 +1,15 @@
+.env
+.env.secret
+OWNER_CLAIM_CODE.txt
+data/
+logs/
+run/
+venv/
+__pycache__/
+*.py[cod]
+*.sqlite
+*.sqlite-*
+*.enc
+.python-version
+.state_key
+.state_key

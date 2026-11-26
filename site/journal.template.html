@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{BRAND}} — public signal journal</title><link rel="stylesheet" href="style.css"></head><body>
+<header class="w"><h1>Public signal journal</h1>
+<p class="sub">Every alert we sent, with its price at the time. After 7 days we check the price again and record what happened, whether it looks good for us or not. Raw data: <a href="journal.json">journal.json</a>. Updated {{UPDATED}}.</p>
+<p><b>{{STATS}}</b></p>
+<div class="disc">How grading works: for large trades and price moves we compare the outcome price 7 days later with the price at the alert. "Continued" means it moved 2+ points the same way, "reversed" means 2+ points the other way, otherwise "flat". This describes what the market did. It is not a trading result, it ignores fees and slippage, and it is not financial advice.</div></header>
+<main class="w"><table><tr><th>Time (UTC)</th><th>Type</th><th>Market / alert</th><th>Price at alert</th><th>7-day check</th></tr>
+{{ROWS}}
+</table></main>
+<footer class="w"><a href="index.html">Home</a> · <a href="terms.html">Terms</a> · Not affiliated with Polymarket</footer></body></html>

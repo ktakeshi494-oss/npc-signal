@@ -1,0 +1,50 @@
+# Short scheduled ticks: collect Polymarket data, serve the Telegram bot via
+# a brief getUpdates session, persist an encrypted SQLite snapshot, publish
+# the public journal to GitHub Pages.
+#
+# Do not store TELEGRAM_BOT_TOKEN, STATE_KEY, or the raw database in git.
+name: runtime
+
+on:
+  schedule:
+    # Every 5 minutes, offset from :00 so we are not in the busiest cron bucket.
+    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: npc-runtime
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Runtime tick
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          STATE_KEY: ${{ secrets.STATE_KEY }}
+          PM_FREE_CHANNEL_ID: ${{ secrets.PM_FREE_CHANNEL_ID }}
+          PM_ADMIN_CHAT_IDS: ${{ secrets.PM_ADMIN_CHAT_IDS }}
+          PM_SITE_URL: ${{ vars.PM_SITE_URL }}
+          PM_SESSION_SECONDS: "180"
+        run: |
+          chmod +x scripts/state_crypt.sh scripts/runtime.sh
+          ./scripts/runtime.sh

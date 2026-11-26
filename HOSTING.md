@@ -1,8 +1,19 @@
 # Круглосуточный хостинг NPC Signal
 
-Исследование на 26 ноября 2026. Ничего из этого ещё не задеплоено.
-Целевой аккаунт: отдельный GitHub для бизнеса (почта `v5yn9jr3@mail.grokbot.com`, имя логина пока неизвестно).
-Публичный репозиторий: `npc-signal`. Сайт: `https://<логин>.github.io/npc-signal/`.
+Исследование на 26 ноября 2026.
+
+## Финальное состояние (задеплоено 26.11.2026, ~16:30–16:45 МСК)
+
+- Репозиторий: https://github.com/ktakeshi494-oss/npc-signal (public, аккаунт ktakeshi494-oss).
+- Сайт (Pages, ветка `gh-pages`, корень): https://ktakeshi494-oss.github.io/npc-signal/ (index, terms, journal.html, journal.json — 200).
+- Workflow `runtime`: cron `3,8,13,...,58 * * * *` (каждые 5 минут) + ручной запуск. Сессия getUpdates 180 с.
+- Секреты Actions: TELEGRAM_BOT_TOKEN, STATE_KEY, PM_FREE_CHANNEL_ID, PM_ADMIN_CHAT_IDS. Переменная: PM_SITE_URL. Workflow permissions: read and write.
+- Ветка `state`: зашифрованная база (AES-256-CBC). Начальное состояние (владелец 315286590, 1 пользователь, сигналы) восстановлено проверено расшифровкой.
+- STATE_KEY хранится на box: `/workspace/bot-business/polymarket/.state_key` (mode 600, в .gitignore) и в Actions secrets. Потеряете оба — база не восстановится.
+- Процессы на box (loop_bot, loop_collector, loop_publisher, bot.py) остановлены, чтобы не было двух поллеров getUpdates. НЕ запускать `start_all.sh` и `health_check.sh --restart`, пока Actions включены.
+- Исправление при деплое: пуши в `state`/`gh-pages` из свежих `git init` каталогов не получали креды от checkout, поэтому в `runtime.sh` добавлена `gh_push` с `GITHUB_TOKEN` (передаётся в env workflow).
+- Откат на box: остановить workflow (`gh workflow disable runtime -R ktakeshi494-oss/npc-signal`), расшифровать `state` в `data/pmsignals.sqlite`, `./start_all.sh`.
+
 
 Box, на котором сейчас крутятся процессы, для 24/7 не годится: при простое агента процессы замирают, хотя uptime не сбрасывается.
 

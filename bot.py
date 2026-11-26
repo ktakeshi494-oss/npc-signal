@@ -35,12 +35,12 @@ def owner_ids():
 def is_admin(chat_id): return chat_id in owner_ids()
 
 def journal_line():
-    return f"Public 7-day grading: {SITE_URL}/journal.html\n" if SITE_URL else ""
+    return f"Public 24h and 7-day grading: {SITE_URL}/journal.html\n" if SITE_URL else ""
 
 TERMS_FULL = (
     f"{BRAND}: terms (short form)\n\n"
     "1. Information service only. Alerts are automated, based on public prediction-market data. Not financial, investment, legal, tax or betting advice. We don't recommend positions, place trades or hold funds.\n"
-    "2. No guarantees. Alerts may be late, incomplete or wrong. Past results (including our public 7-day grading) say nothing about the future.\n"
+    "2. No guarantees. Alerts may be late, incomplete or wrong. Past results (including our public 24h and 7-day grading) say nothing about the future.\n"
     "3. Eligibility: 18+, personal non-commercial use. Not available to residents of the Russian Federation, persons in sanctioned regions (Iran, Syria, Cuba, North Korea, Crimea, Donetsk, Luhansk), professional capital-market firms (brokers, market makers, prop firms, funds, banks, exchanges) or market-data resellers.\n"
     "4. Trading on prediction markets is restricted in many countries (e.g. US, UK, France, Germany). Our alerts don't make it lawful. Never use a VPN to bypass a venue's restrictions.\n"
     "5. Pro alerts are for your own use: no resale, republishing or redistribution.\n"

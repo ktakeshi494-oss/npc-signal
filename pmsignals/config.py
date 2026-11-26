@@ -28,6 +28,8 @@ HOT_NEW_MIN_VOL24 = float(os.environ.get("PM_HOT_NEW_MIN_VOL24", 250000))
 COOLDOWN_H = 12                      # one alert per market per type per 12h
 MAX_SIGNALS_PER_RUN = 8
 VERIFY_AFTER_DAYS = 7
+VERIFY24_AFTER_HOURS = 24
+VERIFY24_WINDOW_H = 24  # 24h check looks at signals aged 24h..48h only
 # skip ultra-short "Up or Down" 5/15-minute crypto markets: pure noise for alerts
 SKIP_SLUG_PATTERNS = ("updown", "up-or-down")
 TOP_MARKETS = 300                    # markets snapshotted per run (by 24h volume)

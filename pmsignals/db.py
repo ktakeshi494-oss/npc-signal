@@ -29,12 +29,27 @@ CREATE TABLE IF NOT EXISTS payments(
 CREATE TABLE IF NOT EXISTS meta(k TEXT PRIMARY KEY, v TEXT);
 """
 
+# Columns added after the first release (24h grading). Added in place if missing.
+MIGRATIONS = (("signals", "verify24_ts", "INTEGER"), ("signals", "verify24_price", "REAL"),
+              ("signals", "verify24_resolved", "TEXT"), ("signals", "verdict24", "TEXT"))
+
+def migrate(con):
+    for table, col, typ in MIGRATIONS:
+        cols = {r[1] for r in con.execute(f"PRAGMA table_info({table})")}
+        if col not in cols:
+            try:
+                con.execute(f"ALTER TABLE {table} ADD COLUMN {col} {typ}")
+            except sqlite3.OperationalError as e:  # concurrent migration
+                if "duplicate column" not in str(e).lower(): raise
+    con.commit()
+
 def connect():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(DB_PATH, timeout=30)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA journal_mode=WAL")
     con.executescript(SCHEMA)
+    migrate(con)
     return con
 
 def now():

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One collection cycle: markets + whale trades -> signals -> 7-day grading -> journal export.
+"""One collection cycle: markets + whale trades -> signals -> 24h and 7-day grading -> journal export.
 Schedule every 10 minutes (see README). Safe to re-run; dedup + cooldowns are in the DB."""
 import argparse, json, sys
 from pmsignals import db, collector, signals, verify, journal

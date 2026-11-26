@@ -37,7 +37,7 @@ else
   echo "no state branch yet; starting with a fresh database"
 fi
 
-# Collector + journal + 7-day grading.
+# Collector + journal + 24h and 7-day grading.
 python run_cycle.py
 
 # Short getUpdates session so buyers can talk to the bot during this tick.
